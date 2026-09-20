@@ -1,0 +1,25 @@
+# Secrets
+.env
+
+# Docker volume data (large, machine-specific, regenerable)
+clickhouse-data/
+baserow-data/
+nifi-data/
+airflow-dags/data/__pycache__/
+
+# dbt
+crypto_dbt/target/
+crypto_dbt/dbt_packages/
+crypto_dbt/logs/
+dbt-env/
+
+# Python
+__pycache__/
+*.pyc
+
+# OS / editor
+.DS_Store
+.vscode/
+logs/ 
+
+.env

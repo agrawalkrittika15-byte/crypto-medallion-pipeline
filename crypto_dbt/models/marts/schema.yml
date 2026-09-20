@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: gold_crypto_summary
+    columns:
+      - name: coin_id
+        data_tests:
+          - not_null
+      - name: symbol
+        data_tests:
+          - not_null
+
+  - name: gold_baserow_summary
+    columns:
+      - name: category
+        data_tests:
+          - not_null
+
+  - name: gold_price_summary
+    columns:
+      - name: symbol
+        data_tests:
+          - not_null

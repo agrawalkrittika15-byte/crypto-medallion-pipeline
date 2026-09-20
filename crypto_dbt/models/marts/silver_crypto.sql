@@ -1,0 +1,27 @@
+﻿SELECT
+    s.date,
+    s.coin_id,
+    s.symbol,
+    s.name,
+    s.market_cap_rank,
+    s.current_price_usd,
+    s.market_cap_usd,
+    s.total_volume_usd,
+    s.high_24h,
+    s.low_24h,
+    s.price_change_pct_24h,
+    s.price_change_pct_7d,
+    s.price_change_pct_30d,
+    s.circulating_supply,
+    s.total_supply,
+    s.max_supply,
+    s.ath,
+    s.ath_change_pct,
+    s.ath_date,
+    s.atl,
+    s.atl_change_pct,
+    s.atl_date,
+    c.category,
+    c.market_cap_tier
+FROM {{ ref('stg_crypto_snapshot') }} AS s
+LEFT JOIN {{ source('crypto_pipeline', 'coins_dim') }} AS c ON s.symbol = c.symbol
