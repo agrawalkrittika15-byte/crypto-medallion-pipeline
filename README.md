@@ -33,7 +33,7 @@ Baserow ────────► Airflow ────────────
 
 ## Setup
 
-1. Copy `.env.example` to `.env` and fill in your own values (see below — **do not commit `.env`**).
+1. Copy `.env.example` to `.env` and fill in your own values (see "Environment variables" below). **Do not commit `.env`.**
 2. Start the stack:
    ```
    docker compose up -d
@@ -50,17 +50,23 @@ Baserow ────────► Airflow ────────────
 
 ## Environment variables
 
-This project uses hardcoded credentials in earlier commits for local development convenience. **Before deploying anywhere beyond localhost, rotate every credential below** and move them into environment variables / Airflow Connections rather than plain text in code:
+All secrets are stored in a local `.env` file, which is listed in `.gitignore` and never committed. Copy `.env.example` to `.env` and set these values:
 
-- `CLICKHOUSE_PASSWORD` (docker-compose.yml)
-- `BASEROW_TOKEN` (airflow-dags/baserow_batch_dag.py)
-- NiFi `SINGLE_USER_CREDENTIALS_PASSWORD` (docker-compose.yml)
+| Variable | Used by |
+|---|---|
+| `CLICKHOUSE_PASSWORD` | ClickHouse, Airflow DAGs |
+| `BASEROW_TOKEN` | Airflow (`baserow_batch_dag.py`) |
+| `NIFI_ADMIN_PASSWORD` | NiFi single-user login (minimum 12 characters) |
+
+The Airflow DAGs read these values from environment variables, so no credentials are stored in code.
 
 ## Project structure
 
 ```
-mini-pipeline/
+crypto-medallion-pipeline/
 ├── docker-compose.yml
+├── .env.example         (template, placeholders only)
+├── flow-backup.xml.gz   (NiFi flow backup)
 ├── airflow-dags/
 │   ├── baserow_batch_dag.py
 │   └── crypto_batch_dag.py
@@ -70,7 +76,7 @@ mini-pipeline/
 │   │   ├── marts/       (silver + gold tables)
 │   │   └── sources.yml
 │   └── dbt_project.yml
-└── nifi-data/           (NiFi flow config, not versioned)
+└── nifi-data/           (NiFi runtime data, not versioned)
 ```
 
 ## Known limitations
