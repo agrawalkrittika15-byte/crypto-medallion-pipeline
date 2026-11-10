@@ -57,15 +57,17 @@ services:
       - "8088:8088"
     environment:
       SUPERSET_SECRET_KEY: "crypto_medallion_superset_secret_key"
+      TALISMAN_ENABLED: "False"
+      PYTHONPATH: "/usr/local/lib/python3.10/site-packages:/app/.venv/lib/python3.10/site-packages"
     volumes:
       - superset_home:/app/superset_home
     command: >
       bash -c "
-      pip install clickhouse-connect &&
+      /app/.venv/bin/pip install clickhouse-connect || pip install clickhouse-connect &&
       superset db upgrade &&
-      superset fab create-admin --username admin --firstname Admin --lastname User --email admin@localhost --password admin &&
+      superset fab create-admin --username admin --firstname Admin --lastname User --email admin@localhost --password admin || true &&
       superset init &&
-      superset run -p 8088 --with-threads --reload --debugger
+      gunicorn --bind 0.0.0.0:8088 --workers 2 --timeout 120 'superset.app:create_app()'
       "
     depends_on:
       - clickhouse
