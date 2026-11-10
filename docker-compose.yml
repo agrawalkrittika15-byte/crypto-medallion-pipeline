@@ -1,4 +1,4 @@
-﻿services:
+services:
   clickhouse:
     image: clickhouse/clickhouse-server:latest
     container_name: clickhouse-server
@@ -49,5 +49,27 @@
       - ./airflow-dags:/opt/airflow/dags
     command: standalone
 
+  superset:
+    image: apache/superset:latest
+    container_name: superset
+    user: root
+    ports:
+      - "8088:8088"
+    environment:
+      SUPERSET_SECRET_KEY: "crypto_medallion_superset_secret_key"
+    volumes:
+      - superset_home:/app/superset_home
+    command: >
+      bash -c "
+      pip install clickhouse-connect &&
+      superset db upgrade &&
+      superset fab create-admin --username admin --firstname Admin --lastname User --email admin@localhost --password admin &&
+      superset init &&
+      superset run -p 8088 --with-threads --reload --debugger
+      "
+    depends_on:
+      - clickhouse
+
 volumes:
   baserow_pgdata:
+  superset_home:
