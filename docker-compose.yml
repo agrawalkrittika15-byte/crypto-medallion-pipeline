@@ -1,4 +1,4 @@
-services:
+﻿services:
   clickhouse:
     image: clickhouse/clickhouse-server:latest
     container_name: clickhouse-server
@@ -72,6 +72,16 @@ services:
     depends_on:
       - clickhouse
 
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+
 volumes:
   baserow_pgdata:
   superset_home:
+  qdrant_data:
